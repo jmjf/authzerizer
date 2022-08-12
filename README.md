@@ -21,11 +21,15 @@ This context may sound strange, but maybe there's a reason I think this is worth
   - On POST, PUT, DELETE, update cache
 - Get admin client id(s) from an environment variable.
 
+For development and proof of concept, I'll start with a simple API with a couple of demo endpoints, then build the code and endpoints that use it.
+
 ## Technology decisions
 
-- Database: Given the implications of the context, something SQL
 - API: Node, TypeScript, Express
-- ORM: probably Prisma
+- ORM: probably Prisma (because next point)
+- Database: Given the implications of the context, something SQL
+  - In my case, Postgres because I already have one handy (in Docker).
+
 
 ## Ideas for the future
 
@@ -33,6 +37,7 @@ This context may sound strange, but maybe there's a reason I think this is worth
 - No-cache option (always read database)
 - AuthN features ???
 - UI for admin ???
+- Alternative to SQL ??? (excuse to dig into micro-database options)
 - Admin endpoints to GET, POST, PUT (update), DELETE allowed scopes in the database ???
   - On DELETE, remove scopes from any client id grants.
 
