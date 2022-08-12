@@ -144,3 +144,11 @@ It loads data.
 -  rename `index.ts` to `loadWithTO.ts`
 
 **COMMIT: CHORE: load sample data with TypeORM**
+
+## Build the GET endpoint
+
+-  `npm i express` and `npm i --save-dev @types/express`
+-  Build the endpoint handler--nothing fancy here
+-  Be sure to wrap it in a `.then()` from the data source init so the data source is connected
+
+**COMMIT: FEAT: add GET endpoint**

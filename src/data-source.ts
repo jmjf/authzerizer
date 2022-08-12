@@ -10,7 +10,7 @@ export const DemoDataSource = new DataSource({
 	database: process.env.TYPEORM_DATABASE,
 	synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
 	logging: process.env.TYPEORM_LOGGING === 'true',
-	entities: ['src/entity/*.entity.ts'],
+	entities: ['src/entity/*.entity.{ts,js}'],
 	migrations: [],
 	subscribers: [],
 });
