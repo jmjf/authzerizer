@@ -132,4 +132,15 @@ I'll commit so this work is saved, then start with a clean `entities` directory.
 
 **COMMIT: CHORE: (semi-working) try to get TypeORM working for the library model**
 
-### Simplify the model
+## Simplify the model
+
+-  Remove subjects. Move role name into `Author`
+-  Move resource data into a module I can import; use it in `index.js` to load data
+-  When loading, find any matching authors and combine with unmatched authors
+-  Assemble `LibraryResource` and save it
+
+It loads data.
+
+-  rename `index.ts` to `loadWithTO.ts`
+
+**COMMIT: CHORE: load sample data with TypeORM**

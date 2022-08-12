@@ -1,16 +1,7 @@
-import {
-	Entity,
-	Column,
-	BeforeInsert,
-	OneToMany,
-	ManyToMany,
-	JoinTable,
-} from 'typeorm';
+import { Entity, Column, BeforeInsert, ManyToMany, JoinTable } from 'typeorm';
 import { nanoid } from 'nanoid';
 
-import { LibraryResourceToAuthor } from './LibraryResourceToAuthor.entity';
-import { LibraryResourceSubject } from './LibraryResourceSubject.entity';
-//import { Author } from './Author.entity';
+import { Author } from './Author.entity';
 
 @Entity({ name: 'LibraryResource' })
 export class LibraryResource {
@@ -66,14 +57,7 @@ export class LibraryResource {
 	})
 	publishedDate: string;
 
-	@OneToMany(() => LibraryResourceToAuthor, (lr2a) => lr2a.libraryResource, {
-		cascade: true,
-	})
-	authors: LibraryResourceToAuthor[];
-
-	@ManyToMany(() => LibraryResourceSubject, {
-		cascade: true,
-	})
-	@JoinTable({ name: 'LibraryResourceToSubject' })
-	subjects: LibraryResourceSubject[];
+	@ManyToMany(() => Author, { cascade: true })
+	@JoinTable({ name: 'LibraryResourceToAuthor' })
+	authors: Author[];
 }

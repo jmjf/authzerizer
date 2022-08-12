@@ -8,4 +8,4 @@
 -  REFACTOR: Refactoring a specific section of the codebase
 -  TEST: Everything related to testing
 -  DOCS: Everything related to documentation
--  CHORE: Regular code maintenance
+-  CHORE: Regular code maintenance; anything that isn't in the above
