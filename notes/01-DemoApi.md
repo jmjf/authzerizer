@@ -98,3 +98,38 @@ With that, it runs and creates a user. Now let's get complex.
 **COMMIT: CHORE: get "hello world" working with TypeORM**
 
 ### Build library data model in TypeORM
+
+-  `npm install nanoid@^3.3.4` so I can use it (4.x is ESM only, which doesn't play well with TS yet)
+-  Add entities for LibraryResource, Author, Subject, LibraryResourceToAuthor
+-  A lot of tuning to get the database schema the way I want it to be
+   -  But now I have a much better feel for how TypeORM declares entities with complex relationships
+-  The LR to LR2A to A relationship is beyond TypeORM's abilities to deal with directly
+   -  Insert authors first
+   -  Then find each author and build LR2A to put on the LR
+   -  Insert LR
+-  That works, until I try to load another resource with and author whose name is already there
+   -  `upsert` wants id and doesn't let me give a `where` term to help it decide if it needs to update or insert
+   -  Also, `upsert` works on a few databases only, so take it off the table
+-  What works (mostly)
+   -  Build a list of distinct author names
+   -  Select full author data for each name or a `new Author()` with name set if not found
+      -  I could make this more efficient by assembling a `where` and doing one `find` to pull all authors, then adding new `Author`s for any not found.
+   -  Save the authors
+   -  Do the same for subjects minus the save because duplicate subject names on a second save to `LibraryResource` also fail
+      -  I haven't done this, but it may work.
+   -  Use authors and subjects to assemble a `LibraryResource`
+   -  Save the `LibraryResource`
+
+I looked at Sequelize too and I don't think it will handle this model any better. So, my conclusion is the ORMs can't cope with this type of model, specifically the M:M relationships, without some help.
+
+Prisma is probably a better choice if binaries aren't a problem. Its upsert may work with databases TypeORM's doesn't support (doesn't say it doesn't work like TypeORM warns, but not tested). I find the model language less complex than TypeORM or Sequelize.
+
+I need to do some more digging into both Prisma and TypeORM.
+
+BUT, this is a demo API, so I'll simplify my model to avoid the problems I'm seeing and charge forward with TypeORM.
+
+I'll commit so this work is saved, then start with a clean `entities` directory.
+
+**COMMIT: CHORE: (semi-working) try to get TypeORM working for the library model**
+
+### Simplify the model
