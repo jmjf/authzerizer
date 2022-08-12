@@ -5,7 +5,9 @@
 	"main": "src/index.js",
 	"scripts": {
 		"test": "npx jest",
-		"test:watch": "npx jest --watchAll"
+		"test:watch": "npx jest --watchAll",
+		"typeorm": "typeorm-ts-node-commonjs",
+		"start:dev": "APP_ENV=dev npx ts-node src/index.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -31,6 +33,9 @@
 	},
 	"dependencies": {
 		"@prisma/client": "^4.2.1",
-		"dotenv": "^16.0.1"
+		"dotenv": "^16.0.1",
+		"pg": "^8.7.3",
+		"reflect-metadata": "^0.1.13",
+		"typeorm": "^0.3.7"
 	}
 }

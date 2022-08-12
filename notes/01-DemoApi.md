@@ -64,3 +64,37 @@ Prisma is not liking the fact that I want it to generate ids for several related
 -  create subject to resource relationships using ids
 -  create author to resource relationships using ids and rolenames
 -  loop
+
+**COMMIT: CHORE: (not working) try to get Prisma to handle the data the way I think it should**
+
+## Rethink and TypeORM
+
+I'm not afraid to change my mind, especially at this early stage.
+
+Besides the issues I'm having above, I'm also aware that Prisma requires binary downloads. That isn't bad in itself, but in certain environments that operate from private repos with no direct access to outside repos or with tight internet access control regimes, that introduces complexity when trying to stay current.
+
+So, switching to TypeORM because it avoids that risk. Personally, I like Prisma's model definition language better, but I'm struggling to express what I want to express in a way it understands. (This data model isn't complex.) So, TypeORM gets a chance.
+
+### Install TypeORM
+
+-  `npm install typeorm reflect-metadata pg` (pg because I'm using Postgres)
+-  In `tsconfig.json`, in `compilerOptions`, ensure `emitDecoratorMetadata` and `experimentalDecorators` are both `true`.
+-  I need to run the init. I'm going to do it in a directory outside this repo to get the files and bring the changes back to this repo.
+   -  Changes to `.gitignore` in a TypeORM section I added
+   -  Add `"sourcemap": true` to `tsconfig.json`
+   -  Add `"typeorm": "typeorm-ts-node-commonjs"` to `package.json` in `scripts` and a start script based on theirs, but with my preferences
+   -  Copied their `src`, will change below.
+
+### Changes to base TypeORM (hello world)
+
+-  Renamed `User.ts` to `User.entity.ts` because I want to follow that naming convention in case I spread entities in different directories
+-  In `index.ts` get environment with dotenv before importing the data source so it can use `process.env`
+   -  Add TYPEORM\_\* to `dev.env` and `SAMPLE`
+-  In `data-source.ts`, remove `User` import, set `entities` to `['src/entity/*.entity.ts']` to pull all entities
+   -  This may change in the future or for production
+
+With that, it runs and creates a user. Now let's get complex.
+
+**COMMIT: CHORE: get "hello world" working with TypeORM**
+
+### Build library data model in TypeORM

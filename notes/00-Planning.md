@@ -24,7 +24,8 @@ For development and proof of concept, I'll start with a simple API with a couple
 ## Technology decisions
 
 -  API: Node, TypeScript, Express
--  ORM: probably Prisma (because next point)
+-  ORM: probably ~~Prisma~~ an ORM of some kind(because next point)
+   -  For reasons, I decided to try TypeORM instead of Prisma
 -  Database: Given the implications of the context, something SQL
    -  In my case, Postgres because I already have one handy (in Docker).
 
