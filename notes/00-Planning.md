@@ -1,6 +1,6 @@
-# authzerizer
+# Planning
 
-A simple API AuthZ subsystem when your IdP doesn't support OAuth2 scopes
+I want to build a simple API AuthZ subsystem to use when an IdP doesn't support OAuth2 scopes.
 
 ## Context
 
@@ -10,8 +10,6 @@ A simple API AuthZ subsystem when your IdP doesn't support OAuth2 scopes
 -  Your OAuth2 provider doesn't support scopes.
 -  Your OAuth2 provider uses client ids that aren't supported by any available authorization system.
 -  Your list of client ids and scopes is relatively small.
-
-This context may sound strange, but maybe there's a reason I think this is worth building.
 
 ## Planned solution
 
@@ -40,8 +38,10 @@ For development and proof of concept, I'll start with a simple API with a couple
 -  Admin endpoints to GET, POST, PUT (update), DELETE allowed scopes in the database ???
    -  On DELETE, remove scopes from any client id grants.
 
-## License
+## High level plan
 
-MIT.
-
-Request, not a requirement: If you use this, port it to some other Node web framework, Java, C#, Carbon, Lua, AAAAAAAAAAAAAA!!!!, whatever, I'd appreciate a credit and a link if possible.
+-  00 - Plan
+-  01 - Build a sample API with Express
+-  02 - Cache the list in memory
+-  03 - Build the middleware
+-  04 - Add admin endpoints (and protect)
