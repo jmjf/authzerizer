@@ -182,6 +182,7 @@ POST and PUT can probably mostly the same code as the data loader.
    -  Now `save` works
 
 **COMMIT: FEAT: add PUT endpoint**
+<<<<<<< HEAD
 
 For reference, the resource I POSTed
 
@@ -203,3 +204,7 @@ For reference, the resource I POSTed
 	"resourceId": "d17eb611-9beb-4036-8aab-5ab42358991a"
 }
 ```
+
+=======
+
+> > > > > > > cb77c387be74fceb7abce2069a45e44aa8ccb2b1
