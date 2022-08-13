@@ -63,6 +63,32 @@ DemoDataSource.initialize().then(async () => {
 		}
 	);
 
+	app.put(
+		`${resourceUrl}/:resourceId`,
+		async (req: express.Request, res: express.Response) => {
+			console.log(
+				'Request',
+				req.route.method,
+				req.url,
+				req.params.resourceId,
+				JSON.stringify(req.body, null, 3)
+			);
+
+			if (!req.params.resourceId || req.params.resourceId.length !== 21)
+				res.send(400);
+
+			// ensure the id is on the resource we pass
+			const resource = { ...req.body, resourceId: req.params.resourceId };
+
+			const libraryResource = await buildLR(resource, dataManager);
+			libraryResource.resourceId =
+				req.params.resourceId || libraryResource.resourceId;
+			await DemoDataSource.manager.save(libraryResource);
+			console.log('Saved resource id: ' + libraryResource.resourceId);
+			res.status(201).send(libraryResource);
+		}
+	);
+
 	app.listen(process.env.EXPRESS_PORT, () => {
 		console.log('API started');
 	});

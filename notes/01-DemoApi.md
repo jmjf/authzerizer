@@ -171,4 +171,14 @@ POST and PUT can probably mostly the same code as the data loader.
 
 **COMMIT: FEAT: add GET by id endpoint**
 
--  PUT /api/resources/:id
+## Add PUT endpoint
+
+-  Similar to the POST, but with GET by id's route
+-  spread the body and replace resourceId with params.resourceId
+-  params.resourceId must be 21 characters (because that's how long the ids are)
+-  `abstract` is empty on the POSTed resource, so can change it and see results easily
+-  Looks like it inserted a new one instead of recognizing the old one, let's use `update` instead of save
+   -  Ah, `buildLR` will create a new `LibraryResource` and not set it's id, so set it when I get it back
+   -  Now `save` works
+
+**COMMIT: FEAT: add PUT endpoint**
