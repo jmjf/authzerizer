@@ -7,6 +7,7 @@ if (!process.env.APP_ENV) {
 dotenv.config({ path: `./env/${process.env.APP_ENV}.env` });
 
 import express from 'express';
+import { buildLR } from './buildLR';
 
 import { DemoDataSource } from './data-source';
 import { LibraryResource } from './entity/LibraryResource.entity';
@@ -17,13 +18,32 @@ DemoDataSource.initialize().then(async () => {
 	const dataManager = DemoDataSource.manager;
 	const resourceUrl = '/api/resources';
 
+	app.use(express.json());
+
 	app.get(resourceUrl, async (req: express.Request, res: express.Response) => {
-		console.log('Request', req.route.path, req.route.method);
+		console.log('Request', req.route.method, req.url);
 		const data = await dataManager.find(LibraryResource, {
 			relations: ['authors'],
 		});
-		res.send(data);
+		res.status(200).send(data);
 	});
+
+	app.post(
+		resourceUrl,
+		async (req: express.Request, res: express.Response) => {
+			console.log(
+				'Request',
+				req.route.method,
+				req.url,
+				JSON.stringify(req.body, null, 3)
+			);
+
+			const libraryResource = await buildLR(req.body, dataManager);
+			await DemoDataSource.manager.save(libraryResource);
+			console.log('Saved resource id: ' + libraryResource.resourceId);
+			res.status(201).send(libraryResource);
+		}
+	);
 
 	app.listen(process.env.EXPRESS_PORT, () => {
 		console.log('API started');

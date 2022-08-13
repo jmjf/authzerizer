@@ -152,3 +152,16 @@ It loads data.
 -  Be sure to wrap it in a `.then()` from the data source init so the data source is connected
 
 **COMMIT: FEAT: add GET endpoint**
+
+## Build the POST endpoint
+
+POST and PUT can probably mostly the same code as the data loader.
+
+-  `buildLR()` is the core of the loader, returns a LibraryResource
+-  await it and save
+-  remember to `app.use(express.json())` so we get a body
+
+**COMMIT: FEAT: add POST endpoint**
+
+-  GET /api/resources/:id
+-  PUT /api/resources/:id
