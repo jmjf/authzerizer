@@ -28,6 +28,24 @@ DemoDataSource.initialize().then(async () => {
 		res.status(200).send(data);
 	});
 
+	app.get(
+		`${resourceUrl}/:resourceId`,
+		async (req: express.Request, res: express.Response) => {
+			console.log(
+				`Request`,
+				req.route.method,
+				req.url,
+				req.params.resourceId
+			);
+
+			const data = await dataManager.find(LibraryResource, {
+				where: { resourceId: req.params.resourceId },
+				relations: ['authors'],
+			});
+			res.status(200).send(data);
+		}
+	);
+
 	app.post(
 		resourceUrl,
 		async (req: express.Request, res: express.Response) => {

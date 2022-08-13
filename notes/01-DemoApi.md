@@ -163,5 +163,12 @@ POST and PUT can probably mostly the same code as the data loader.
 
 **COMMIT: FEAT: add POST endpoint**
 
--  GET /api/resources/:id
+## Add GET by id endpoint
+
+-  Same as the GET endpoint, but include a `where` term for the id
+-  id from req.params.resourceId
+-  test with the id from the POSTed resource above
+
+**COMMIT: FEAT: add GET by id endpoint**
+
 -  PUT /api/resources/:id
