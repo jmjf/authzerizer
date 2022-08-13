@@ -171,4 +171,35 @@ POST and PUT can probably mostly the same code as the data loader.
 
 **COMMIT: FEAT: add GET by id endpoint**
 
--  PUT /api/resources/:id
+## Add PUT endpoint
+
+-  Similar to the POST, but with GET by id's route
+-  spread the body and replace resourceId with params.resourceId
+-  params.resourceId must be 21 characters (because that's how long the ids are)
+-  `abstract` is empty on the POSTed resource, so can change it and see results easily
+-  Looks like it inserted a new one instead of recognizing the old one, let's use `update` instead of save
+   -  Ah, `buildLR` will create a new `LibraryResource` and not set it's id, so set it when I get it back
+   -  Now `save` works
+
+**COMMIT: FEAT: add PUT endpoint**
+
+For reference, the resource I POSTed
+
+```json
+{
+	"title": "The secret history of the Lord of Musashi ; and, Arrowroot",
+	"subtitle": "",
+	"authors": [{ "authorName": "Tanizaki, Jun'ichirō", "roleTerm": "creator" }],
+	"lcCallNumber": "PL839.A7 A23 1982",
+	"ddCallNumber": "895.6/34",
+	"isbn": "0394524543",
+	"abstract": "",
+	"subjects": [
+		"Japanese fiction — Translations into English",
+		"Japanese fiction"
+	],
+	"publisherName": "Knopf",
+	"publishedDate": "1982",
+	"resourceId": "d17eb611-9beb-4036-8aab-5ab42358991a"
+}
+```
