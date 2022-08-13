@@ -1,8 +1,7 @@
 {
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"display": "Node 18 + Strictest",
 	"compilerOptions": {
-		"$schema": "https://json.schemastore.org/tsconfig",
-		"display": "Node 18 + Strictest",
-
 		"lib": ["es2022"],
 		"module": "commonjs",
 		"target": "es2022",
@@ -13,11 +12,11 @@
 		"moduleResolution": "node",
 		"allowUnusedLabels": false,
 		"allowUnreachableCode": false,
-		"exactOptionalPropertyTypes": true,
+		//"exactOptionalPropertyTypes": true, // causes issues with typeorm datasource
 		"noFallthroughCasesInSwitch": true,
 		"noImplicitOverride": true,
 		"noImplicitReturns": true,
-		"noPropertyAccessFromIndexSignature": true,
+		//"noPropertyAccessFromIndexSignature": true,  // causes issues with typeorm datasource
 		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
@@ -29,10 +28,14 @@
 		"types": ["node", "jest"],
 		"resolveJsonModule": true,
 		"outDir": "./dist",
-		"inlineSourceMap": true,
 		"noImplicitAny": true,
 		"strictNullChecks": true,
-		"strictBindCallApply": false
+		"strictBindCallApply": false,
+		// typeorm
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"strictPropertyInitialization": false, // required for entity markup
+		"sourceMap": true
 	},
 	"ts-node": {
 		"esm": true

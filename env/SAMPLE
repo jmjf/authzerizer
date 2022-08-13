@@ -1,0 +1,17 @@
+# Required for Postgres in docker-compose
+POSTGRES_USER=<username>
+POSTGRES_PASSWORD=<password>
+POSTGRES_DB=<database>
+
+# TypeORM configuration
+# set database type in the data source because type issues
+TYPEORM_HOST=<hostname>
+TYPEORM_USERNAME=<username>
+TYPEORM_PASSWORD=<password>
+TYPEORM_DATABASE=<databasename>
+TYPEORM_PORT=<port>
+TYPEORM_SYNCHRONIZE=<true or false>
+TYPEORM_LOGGING=<true or false>
+
+# Prisma database URL
+DATABASE_URL="postgresql://<username>:<password>@<hostname>:<port>/<databasename>?schema=<schemaname>"
