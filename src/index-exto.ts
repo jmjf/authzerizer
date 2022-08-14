@@ -18,6 +18,7 @@ DemoDataSource.initialize().then(async () => {
 	const dataManager = DemoDataSource.manager;
 	const resourceUrl = '/api/resources';
 
+	app.set('x-powered-by', false);
 	app.use(express.json());
 
 	app.get(resourceUrl, async (req: express.Request, res: express.Response) => {

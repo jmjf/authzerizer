@@ -9,9 +9,12 @@ TYPEORM_HOST=<hostname>
 TYPEORM_USERNAME=<username>
 TYPEORM_PASSWORD=<password>
 TYPEORM_DATABASE=<databasename>
-TYPEORM_PORT=<port>
+TYPEORM_PORT=<dbPort>
 TYPEORM_SYNCHRONIZE=<true or false>
 TYPEORM_LOGGING=<true or false>
 
 # Prisma database URL
-DATABASE_URL="postgresql://<username>:<password>@<hostname>:<port>/<databasename>?schema=<schemaname>"
+DATABASE_URL="postgresql://<username>:<password>@<hostname>:<dbPort>/<databasename>?schema=<schemaname>"
+
+# Express configuration
+EXPRESS_PORT=<expressPort>

@@ -43,6 +43,7 @@ For development and proof of concept, I'll start with a simple API with a couple
 
 -  00 - Plan
 -  01 - Build a sample API with Express
--  02 - Cache the list in memory
--  03 - Build the middleware
--  04 - Add admin endpoints (and protect)
+-  02 - Add AuthN capability
+-  03 - Cache the list in memory
+-  04 - Build the middleware
+-  05 - Add admin endpoints (and protect)
