@@ -223,25 +223,25 @@ interface AuthNerizerJwtPayload {
    -  default Express error handler will respond with an error using status code from the error or 400
 
 Tests for buildAuthNerizer
-[x] When no options for publicKey or JWKS, it throws an error
-[x] When no public key and only one option for JWKS, it throws an error
-[x] When options are good, it returns a function
+- [x] When no options for publicKey or JWKS, it throws an error
+- [x] When no public key and only one option for JWKS, it throws an error
+- [x] When options are good, it returns a function
 
 Tests for middleware returned
 
 authnRequired false
 
-[x] When it gets a request without an Authorization header, it passes the request; jwtPayload undefined
-[x] When it gets a request without Bearer, it passes the request; jwtPayload undefined
-[x] When it gets a bad token, it passes the request; jwtPayload undefined
-[x] When it gets a good token, it passes the request; jwtPayload undefined
+- [x] When it gets a request without an Authorization header, it passes the request; jwtPayload undefined
+- [x] When it gets a request without Bearer, it passes the request; jwtPayload undefined
+- [x] When it gets a bad token, it passes the request; jwtPayload undefined
+- [x] When it gets a good token, it passes the request; jwtPayload undefined
 
 authnRequired true
 
-[x] When it gets no Authorization header, it errors 401; jwtToken undefined
-[x] When it gets an authorization type that isn't Bearer, it errors 401; jwtToken undefined
-[x] When it gets an invalid token, it errors 401; jwtPaylod undefined
-[x] When it gets a valid token, it passes the request; jwtPaylod contains the token
+- [x] When it gets no Authorization header, it errors 401; jwtToken undefined
+- [x] When it gets an authorization type that isn't Bearer, it errors 401; jwtToken undefined
+- [x] When it gets an invalid token, it errors 401; jwtPaylod undefined
+- [x] When it gets a valid token, it passes the request; jwtPaylod contains the token
 
 **CODE: TEST: add unit tests for AuthNerizer**
 
@@ -253,10 +253,10 @@ authnRequired true
 
 HTTP call tests
 
-[x] No Authorization header -> unauthorized
-[x] Not Bearer -> unauthorized
-[x] Invalid token (expired) -> unauthorized
-[x] Valid token -> returns data
+- [x] No Authorization header -> unauthorized
+- [x] Not Bearer -> unauthorized
+- [x] Invalid token (expired) -> unauthorized
+- [x] Valid token -> returns data
 
 Plus more, but all show it works.
 
