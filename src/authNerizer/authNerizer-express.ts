@@ -2,7 +2,7 @@ import type { Agent } from 'https';
 import type { Request, Response, NextFunction } from 'express';
 
 import buildGetJwks from 'get-jwks';
-import { createVerifier, VerifierOptions } from 'fast-jwt';
+import { createVerifier, Algorithm } from 'fast-jwt';
 
 // from get-jwks, not exported so define it
 export type GetPublicKeyOptions = {
@@ -21,8 +21,25 @@ export type GetJwksOptions = {
 	agent?: Agent;
 };
 
-// from fast-jwks
-export { VerifierOptions };
+// from fast-jwks, exports the interface, but members not optional
+export interface VerifierOptions {
+	algorithms?: Algorithm[];
+	complete?: boolean;
+	cache?: boolean | number;
+	cacheTTL?: number;
+	allowedJti?: string | RegExp | Array<string | RegExp>;
+	allowedAud?: string | RegExp | Array<string | RegExp>;
+	allowedIss?: string | RegExp | Array<string | RegExp>;
+	allowedSub?: string | RegExp | Array<string | RegExp>;
+	allowedNonce?: string | RegExp | Array<string | RegExp>;
+	ignoreExpiration?: boolean;
+	ignoreNotBefore?: boolean;
+	maxAge?: number;
+	clockTimestamp?: number;
+	clockTolerance?: number;
+	requiredClaims?: Array<string>;
+	checkTyp?: string;
+}
 
 export type AuthNerizerOptions = {
 	requireValidToken?: boolean;

@@ -244,3 +244,17 @@ authnRequired true
 **CODE: TEST: add unit tests for AuthNerizer**
 
 ## Add to the API
+
+-  Add AuthNerizer to the API with a somewhat restrictive configuration
+-  Add a simple jwt payload logger middleware to show JWTs (on success)
+-  Add a simple error logger middleware to see errors and reject the request (because default errors are verbose)
+
+HTTP call tests
+[x] No Authorization header -> unauthorized
+[x] Not Bearer -> unauthorized
+[x] Invalid token (expired) -> unauthorized
+[x] Valid token -> returns data
+
+Plus more, but all show it works.
+
+**CODE: FEAT: add AuthNerizer to the API; plus JWT logger, error logger/rejecter**
