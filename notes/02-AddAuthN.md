@@ -230,12 +230,14 @@ Tests for buildAuthNerizer
 Tests for middleware returned
 
 authnRequired false
+
 [x] When it gets a request without an Authorization header, it passes the request; jwtPayload undefined
 [x] When it gets a request without Bearer, it passes the request; jwtPayload undefined
 [x] When it gets a bad token, it passes the request; jwtPayload undefined
 [x] When it gets a good token, it passes the request; jwtPayload undefined
 
 authnRequired true
+
 [x] When it gets no Authorization header, it errors 401; jwtToken undefined
 [x] When it gets an authorization type that isn't Bearer, it errors 401; jwtToken undefined
 [x] When it gets an invalid token, it errors 401; jwtPaylod undefined
@@ -250,6 +252,7 @@ authnRequired true
 -  Add a simple error logger middleware to see errors and reject the request (because default errors are verbose)
 
 HTTP call tests
+
 [x] No Authorization header -> unauthorized
 [x] Not Bearer -> unauthorized
 [x] Invalid token (expired) -> unauthorized
