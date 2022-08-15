@@ -7,7 +7,7 @@
 		"test": "npx jest",
 		"test:watch": "npx jest --watchAll",
 		"typeorm": "typeorm-ts-node-commonjs",
-		"start:dev": "APP_ENV=dev npx ts-node src/index.ts"
+		"start:dev:exto": "APP_ENV=dev npx ts-node src/index-exto.ts"
 	},
 	"repository": {
 		"type": "git",
@@ -36,6 +36,8 @@
 		"@prisma/client": "^4.2.1",
 		"dotenv": "^16.0.1",
 		"express": "^4.18.1",
+		"fast-jwt": "^1.7.0",
+		"get-jwks": "^7.1.1",
 		"nanoid": "^3.3.4",
 		"pg": "^8.7.3",
 		"reflect-metadata": "^0.1.13",

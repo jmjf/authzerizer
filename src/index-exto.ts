@@ -7,8 +7,14 @@ if (!process.env.APP_ENV) {
 dotenv.config({ path: `./env/${process.env.APP_ENV}.env` });
 
 import express from 'express';
-import { buildLR } from './buildLR';
 
+import {
+	buildAuthNerizer,
+	ErrorWithStatus,
+	RequestWithJwtPayload,
+} from './authNerizer/authNerizer-express';
+
+import { buildLR } from './buildLR';
 import { DemoDataSource } from './data-source';
 import { LibraryResource } from './entity/LibraryResource.entity';
 // import { Author } from './entity/Author.entity';
@@ -18,26 +24,73 @@ DemoDataSource.initialize().then(async () => {
 	const dataManager = DemoDataSource.manager;
 	const resourceUrl = '/api/resources';
 
-	app.use(express.json());
+	const authIssuer = process.env.AUTH_ISSUER || undefined;
+	const authDomain = process.env.AUTH_DOMAIN || undefined;
+	const authAudience = process.env.AUTH_AUDIENCE || undefined;
 
-	app.get(resourceUrl, async (req: express.Request, res: express.Response) => {
-		console.log('Request', req.route.method, req.url);
-		const data = await dataManager.find(LibraryResource, {
-			relations: ['authors'],
-		});
-		res.status(200).send(data);
+	const authNerizer = await buildAuthNerizer({
+		getJwksOptions: {
+			allowedDomains: authDomain ? [authDomain] : undefined,
+		},
+		getPublicKeyOptions: {
+			kid: process.env.AUTH_JWKS_KID,
+			domain: authIssuer,
+			alg: 'RS256',
+		},
+		verifierOptions: {
+			algorithms: ['RS256'],
+			allowedAud: authAudience ? [authAudience] : undefined,
+			allowedIss: authIssuer ? [authIssuer] : undefined,
+			// tokens without exp pass verification, so require it
+			requiredClaims: ['sub', 'aud', 'iss', 'exp'],
+		},
 	});
+
+	const jwtPayloadLogger = (
+		req: RequestWithJwtPayload,
+		res: express.Response,
+		next: express.NextFunction
+	) => {
+		if (req.jwtPayload) {
+			console.log('JWT', req.jwtPayload);
+		}
+		return next();
+	};
+
+	const errorHandler = (
+		error: ErrorWithStatus,
+		req: express.Request,
+		res: express.Response,
+		next: express.NextFunction
+	) => {
+		console.log(
+			'ERROR',
+			error.statusCode,
+			error.message,
+			req.get('Authorization')
+		);
+		res.sendStatus(error.statusCode || 400);
+	};
+
+	app.set('x-powered-by', false);
+	app.use(express.json());
+	app.use(authNerizer);
+	app.use(jwtPayloadLogger);
+	app.use(errorHandler);
+
+	app.get(
+		resourceUrl,
+		async (req: RequestWithJwtPayload, res: express.Response) => {
+			const data = await dataManager.find(LibraryResource, {
+				relations: ['authors'],
+			});
+			res.status(200).send(data);
+		}
+	);
 
 	app.get(
 		`${resourceUrl}/:resourceId`,
-		async (req: express.Request, res: express.Response) => {
-			console.log(
-				`Request`,
-				req.route.method,
-				req.url,
-				req.params.resourceId
-			);
-
+		async (req: RequestWithJwtPayload, res: express.Response) => {
 			const data = await dataManager.find(LibraryResource, {
 				where: { resourceId: req.params.resourceId },
 				relations: ['authors'],
@@ -49,13 +102,6 @@ DemoDataSource.initialize().then(async () => {
 	app.post(
 		resourceUrl,
 		async (req: express.Request, res: express.Response) => {
-			console.log(
-				'Request',
-				req.route.method,
-				req.url,
-				JSON.stringify(req.body, null, 3)
-			);
-
 			const libraryResource = await buildLR(req.body, dataManager);
 			await DemoDataSource.manager.save(libraryResource);
 			console.log('Saved resource id: ' + libraryResource.resourceId);
@@ -66,14 +112,6 @@ DemoDataSource.initialize().then(async () => {
 	app.put(
 		`${resourceUrl}/:resourceId`,
 		async (req: express.Request, res: express.Response) => {
-			console.log(
-				'Request',
-				req.route.method,
-				req.url,
-				req.params.resourceId,
-				JSON.stringify(req.body, null, 3)
-			);
-
 			if (!req.params.resourceId || req.params.resourceId.length !== 21)
 				res.send(400);
 
