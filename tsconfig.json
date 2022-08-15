@@ -19,8 +19,8 @@
 		//"noPropertyAccessFromIndexSignature": true,  // causes issues with typeorm datasource
 		"noUncheckedIndexedAccess": true,
 		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"importsNotUsedAsValues": "error",
+		//"noUnusedParameters": true,
+		"importsNotUsedAsValues": "remove",
 		"checkJs": true,
 
 		"rootDir": "./src",

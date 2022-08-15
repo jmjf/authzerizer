@@ -94,18 +94,25 @@ AuthNerizer takes options as defined in the `AuthNerizerOptions` interface.
 
 ```typescript
 interface AuthNerizerOptions {
-	authnRequired?: boolean;
+	requireValidToken?: boolean;
 	/**
 	 * Optional
 	 *
 	 * Default: true
 	 *
-	 * If true, reject (401 Unauthorized) any request that does not include an authorization token or does not pass authentication
+	 * If true, pass on an error (statusCode=401; Unauthorized) any request that does not include an valid Bearer token
+	 * "pass on an error" means it calls next(new ErrorWithStatusCode(401, 'Unauthorized')) so later error handling middleware can process it
+	 *
+	 * If false, do not error requests that do not include a valid Bearer token
+	 *
+	 * In both cases:
+	 * 	If the token is valid, req.jwtPayload contains the token's payload
+	 * 	If the token is invalid, req.jwtPayload exists, but is undefined
 	 */
 
 	/**
 	 * NOTE: YOU MUST PROVIDE EITHER
-	 * 	publicKey (PEM)
+	 * 	publicKey
 	 * 		OR
 	 * 	getJwksOptions AND getPublicKeyOptions (one-time JWKS)
 	 *
@@ -186,8 +193,9 @@ interface AuthNerizerOptions {
 
 AuthNerizer also provides:
 
--  `interface AuthNerizerRequest extends express.Request` adding `jwtPayload: AuthNerizerJwtPayload`
--  `interface AuthNerizerJwtPayload` with common JWT claims
+-  `interface RequestWithJwtPayload extends express.Request` adding `jwtPayload: JwtPayload`
+-  `interface JwtPayload` with common JWT claims
+-  `class ErrorWithStatus extends Error` adding `statusCodeValue: number`
 
 ```typescript
 interface AuthNerizerJwtPayload {
@@ -205,12 +213,34 @@ interface AuthNerizerJwtPayload {
 
 **COMMIT: FEAT: (untested) build Express middleware to authenticate (AuthN) a JWT token**
 
-## Test it
+## Write tests for it
 
--  Add to the API
--  When it gets no token, it returns 401
--  When it gets no Authorization header, it returns 401
--  When it gets an Authorization header that isn't a Bearer type, it returns 401
--  When it gets an Authoriation header with Bearer type and an invalid token (fake), it returns 401
--  When it gets an expired token, it returns 401
--  When it gets a valid token, it passes and allows the route to run
+-  Add `jest.config.js` to support TypeScript
+-  Turn off TS option that disallows unused params (because res isn't used but is required)
+-  Research on middleware error handling
+   -  `return next(err);`
+   -  makes the error available to any error handling middleware downstream
+   -  default Express error handler will respond with an error using status code from the error or 400
+
+Tests for buildAuthNerizer
+[x] When no options for publicKey or JWKS, it throws an error
+[x] When no public key and only one option for JWKS, it throws an error
+[x] When options are good, it returns a function
+
+Tests for middleware returned
+
+authnRequired false
+[x] When it gets a request without an Authorization header, it passes the request; jwtPayload undefined
+[x] When it gets a request without Bearer, it passes the request; jwtPayload undefined
+[x] When it gets a bad token, it passes the request; jwtPayload undefined
+[x] When it gets a good token, it passes the request; jwtPayload undefined
+
+authnRequired true
+[x] When it gets no Authorization header, it errors 401; jwtToken undefined
+[x] When it gets an authorization type that isn't Bearer, it errors 401; jwtToken undefined
+[x] When it gets an invalid token, it errors 401; jwtPaylod undefined
+[x] When it gets a valid token, it passes the request; jwtPaylod contains the token
+
+**CODE: TEST: add unit tests for AuthNerizer**
+
+## Add to the API

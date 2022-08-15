@@ -4,15 +4,15 @@ import type { Request, Response, NextFunction } from 'express';
 import buildGetJwks from 'get-jwks';
 import { createVerifier, VerifierOptions } from 'fast-jwt';
 
-// from get-jwks
-type GetPublicKeyOptions = {
+// from get-jwks, not exported so define it
+export type GetPublicKeyOptions = {
 	domain?: string;
 	alg?: string;
 	kid?: string;
 };
 
-// from get-jwks
-type GetJwksOptions = {
+// from get-jwks, not exported so define it
+export type GetJwksOptions = {
 	max?: number;
 	ttl?: number;
 	allowedDomains?: string[];
@@ -21,15 +21,18 @@ type GetJwksOptions = {
 	agent?: Agent;
 };
 
-interface AuthNerizerOptions {
-	authnRequired?: boolean;
+// from fast-jwks
+export { VerifierOptions };
+
+export type AuthNerizerOptions = {
+	requireValidToken?: boolean;
 	publicKey?: string | Buffer;
 	getPublicKeyOptions?: GetPublicKeyOptions;
 	getJwksOptions?: GetJwksOptions;
 	verifierOptions?: VerifierOptions;
-}
+};
 
-interface AuthNerizerJwtPayload {
+export type JwtPayload = {
 	iss?: string;
 	sub?: string;
 	aud?: string;
@@ -39,13 +42,13 @@ interface AuthNerizerJwtPayload {
 	azp?: string;
 	gty?: string;
 	jti?: string;
+};
+
+export interface RequestWithJwtPayload extends Request {
+	jwtPayload?: JwtPayload;
 }
 
-interface AuthNerizerRequest extends Request {
-	jwtPayload?: AuthNerizerJwtPayload;
-}
-
-class AuthnerizerError extends Error {
+export class ErrorWithStatus extends Error {
 	statusCode: number;
 
 	constructor(statusCode: number, message: string) {
@@ -56,7 +59,7 @@ class AuthnerizerError extends Error {
 	}
 }
 
-async function buildAuthNerizer(opts: AuthNerizerOptions) {
+export async function buildAuthNerizer(opts: AuthNerizerOptions = {}) {
 	// setup and configure
 	// buildGetJwks uses defaults for any values not provided
 
@@ -83,11 +86,14 @@ async function buildAuthNerizer(opts: AuthNerizerOptions) {
 		...opts.verifierOptions,
 	});
 
-	const authnRequired = opts.authnRequired || true;
+	const requireValidToken =
+		typeof opts.requireValidToken === 'boolean'
+			? opts.requireValidToken
+			: true;
 
 	// the actual middleware
 	return function (
-		req: AuthNerizerRequest,
+		req: RequestWithJwtPayload,
 		res: Response,
 		next: NextFunction
 	) {
@@ -102,7 +108,7 @@ async function buildAuthNerizer(opts: AuthNerizerOptions) {
 		}
 
 		// Get authorization header
-		const authHeader = req.header('Authorization');
+		const authHeader = req.get('Authorization');
 
 		if (authHeader) {
 			// get the token
@@ -114,30 +120,20 @@ async function buildAuthNerizer(opts: AuthNerizerOptions) {
 
 				if (typeof jwtPayload === 'object') {
 					req.jwtPayload = jwtPayload;
-					next();
-					return; // probably not required, but make intent clear
+					return next();
 				}
 			}
 		}
 
 		// One of the following is true
 		// no auth header; not a bearer token; payload fails verification; payload isn't an object
-		if (authnRequired) {
+		if (requireValidToken) {
 			// authn required, but token isn't usable
-			next(new AuthnerizerError(401, 'Unauthorized'));
-			return; // probably not required, but make intent clear
+			req.jwtPayload = undefined;
+			return next(new ErrorWithStatus(401, 'Unauthorized'));
+		} else {
+			req.jwtPayload = undefined;
+			return next();
 		}
-
-		next();
 	};
 }
-
-export {
-	AuthNerizerOptions,
-	AuthNerizerRequest,
-	AuthNerizerJwtPayload,
-	GetPublicKeyOptions,
-	GetJwksOptions,
-	VerifierOptions,
-	buildAuthNerizer,
-};
