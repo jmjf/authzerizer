@@ -45,5 +45,5 @@ For development and proof of concept, I'll start with a simple API with a couple
 -  01 - Build a sample API with Express
 -  02 - Add AuthN capability
 -  03 - Cache the list in memory
--  04 - Build the middleware
+-  04 - Build the AuthZ middleware
 -  05 - Add admin endpoints (and protect)
