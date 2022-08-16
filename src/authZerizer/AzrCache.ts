@@ -1,9 +1,10 @@
-export class AZRCache {
+export class AzrCache {
 	private _keys;
 	private _values;
 
 	constructor(size = 1000) {
-		if (size > 5000) throw new Error('AZRCache max size is 5000');
+		if (size > 5000)
+			throw new Error('AzrCache constructor: max size is 5000');
 
 		this._keys = new Array<string>(size);
 		this._values = new Array<string[]>(size);
@@ -11,14 +12,14 @@ export class AZRCache {
 	}
 
 	public set(key: string, value: string[]): void {
-		if (typeof key !== 'string') throw new Error('Invalid key');
+		if (typeof key !== 'string') throw new Error('AzrCache set: Invalid key');
 
 		// if it isn't an array; is an array with at least one element but type isn't string
 		if (
 			!Array.isArray(value) ||
 			(value.length > 0 && typeof value[0] !== 'string')
 		)
-			throw new Error('Invalid value');
+			throw new Error('AzrCache set: Invalid value');
 
 		const index = this._keys.findIndex((k) => k === key);
 		if (index >= 0) {
